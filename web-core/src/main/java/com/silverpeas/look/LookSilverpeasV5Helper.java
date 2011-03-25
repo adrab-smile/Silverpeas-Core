@@ -23,6 +23,7 @@
  */
 package com.silverpeas.look;
 
+import com.silverpeas.SilverpeasServiceProvider;
 import com.silverpeas.personalization.UserMenuDisplay;
 import com.silverpeas.personalization.service.PersonalizationService;
 import com.silverpeas.util.FileUtil;
@@ -206,11 +207,12 @@ public class LookSilverpeasV5Helper implements LookHelper {
     this.orga = mainSessionController.getOrganizationController();
     this.userId = mainSessionController.getUserId();
     this.resources = resources;
-    this.defaultMessages = new ResourceLocator("com.silverpeas.lookSilverpeasV5.multilang.lookBundle",
+    this.defaultMessages = new ResourceLocator(
+        "com.silverpeas.lookSilverpeasV5.multilang.lookBundle",
         mainSessionController.getFavoriteLanguage());
     if (StringUtil.isDefined(resources.getString("MessageBundle"))) {
-      this.messages = new ResourceLocator(resources.getString("MessageBundle"), mainSessionController.
-              getFavoriteLanguage());
+      this.messages = new ResourceLocator(resources.getString("MessageBundle"),
+          mainSessionController.getFavoriteLanguage());
     }
     initProperties();
     getTopItems();
@@ -225,13 +227,17 @@ public class LookSilverpeasV5Helper implements LookHelper {
     shouldDisplayConnectedUsers = resources.getBoolean("displayConnectedUsers", true);
     displayUserMenu = UserMenuDisplay.valueOf(resources.getString("displayUserFavoriteSpace",
         PersonalizationService.DEFAULT_MENU_DISPLAY_MODE.name()).toUpperCase());
+    if (isMenuPersonalisationEnabled()) {
+      displayUserMenu = SilverpeasServiceProvider.getPersonalizationService().getUserSettings(userId).
+          getDisplay();
+    }
     enableUFSContainsState = resources.getBoolean("enableUFSContainsState", false);
   }
 
   public boolean isMenuPersonalisationEnabled() {
     return UserMenuDisplay.DISABLE != UserMenuDisplay.valueOf(
         resources.getString("displayUserFavoriteSpace",
-            PersonalizationService.DEFAULT_MENU_DISPLAY_MODE.name()).toUpperCase());
+        PersonalizationService.DEFAULT_MENU_DISPLAY_MODE.name()).toUpperCase());
   }
 
   protected MainSessionController getMainSessionController() {
@@ -520,7 +526,9 @@ public class LookSilverpeasV5Helper implements LookHelper {
       Collections.reverse(spaces);
 
       String wallpaper = null;
-      for (int i = 0; wallpaper == null && i < spaces.size(); i++) {
+      for (int i = 0;
+          wallpaper == null && i < spaces.size();
+          i++) {
         SpaceInst space = spaces.get(i);
         wallpaper = getSpaceWallPaper(space.getId());
       }
@@ -550,8 +558,7 @@ public class LookSilverpeasV5Helper implements LookHelper {
     File file = new File(path + image);
     if (file.isFile()) {
       return FileServerUtils.getOnlineURL("Space" + spaceId, file.getName(), file.getName(),
-          FileUtil.
-              getMimeType(image), "look");
+          FileUtil.getMimeType(image), "look");
     }
     return null;
   }
@@ -626,7 +633,9 @@ public class LookSilverpeasV5Helper implements LookHelper {
     }
     List<PublicationDetail> filteredPublis = new ArrayList<PublicationDetail>();
     PublicationDetail publi;
-    for (int i = 0; publis != null && i < publis.size(); i++) {
+    for (int i = 0;
+        publis != null && i < publis.size();
+        i++) {
       publi = publis.get(i);
       if (PublicationDetail.VALID.equalsIgnoreCase(publi.getStatus())) {
         filteredPublis.add(publi);
@@ -734,7 +743,9 @@ public class LookSilverpeasV5Helper implements LookHelper {
    */
   public List<Shortcut> getShortcuts(String id, int nb) {
     List<Shortcut> shortcuts = new ArrayList<Shortcut>();
-    for (int i = 1; i <= nb; i++) {
+    for (int i = 1;
+        i <= nb;
+        i++) {
       String prefix = "Shortcut." + id + "." + i;
       String url = getSettings(prefix + ".Url", "toBeDefined");
       String target = getSettings(prefix + ".Target", "toBeDefined");

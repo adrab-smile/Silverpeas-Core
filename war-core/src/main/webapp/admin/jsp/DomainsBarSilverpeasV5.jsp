@@ -223,8 +223,7 @@ out.println(gef.getLookStyleSheet());
     }
 
     function getFooterPage()
-    {
-        //return getContext()+"/RpdcSearch/jsp/ChangeSearchTypeToExpert?mode=clear&amp;SearchPage=/admin/jsp/pdcSearchSilverpeasV5.jsp&";
+    {        
     	return getContext()+"/RpdcSearch/jsp/ChangeSearchTypeToExpert?SearchPage=/admin/jsp/pdcSearchSilverpeasV5.jsp&";
     }
 
@@ -232,8 +231,7 @@ out.println(gef.getLookStyleSheet());
      * Reload bottom frame
      */
     function reloadSpacesBarFrame(tabId) {
-       top.bottomFrame.location.href="<%=m_sContext%>/admin/jsp/frameBottomSilverpeasV5.jsp?UserMenuDisplayMode=" + tabId;
-       //top.SpacesBar.location.href="<%=m_sContext%>/admin/jsp/DomainsBarSilverpeasV5.jsp";
+       top.bottomFrame.location.href="<%=m_sContext%>/admin/jsp/frameBottomSilverpeasV5.jsp?UserMenuDisplayMode=" + tabId;       
     }
 
     function getPersonalSpaceLabels()
